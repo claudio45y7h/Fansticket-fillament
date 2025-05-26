@@ -18,10 +18,9 @@ return new class extends Migration
             $table->string('row')->nullable();
             $table->string('seat')->nullable();
             $table->string('info');
-            $table->string('type');
+            $table->string('category_id', 20);
             $table->integer('stock')->default(0);
-            $table->decimal('price', 10, 2);
-
+            $table->foreign('category_id')->references('id')->on('ticket_categories')->onDelete('restrict');
             $table->timestamps();
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
         });

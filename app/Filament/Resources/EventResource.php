@@ -15,9 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class EventResource extends Resource
 {
-    protected static ?string $model = Event::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $model = Event::class;    protected static ?string $navigationIcon = 'heroicon-o-calendar';
 
     public static function form(Form $form): Form
     {
@@ -59,36 +57,19 @@ class EventResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('artist')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('id')
+                    ->sortable()
+                    ->label('ID'),
                 Tables\Columns\TextColumn::make('event')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('venue')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('city')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('date')
-                    ->dateTime()
+                    ->label('Evento')
+                    ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('poster')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('info')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('policies')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('spotify_iframe')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('venue_iframe')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('date')
+                    ->label('Fecha')
+                    ->dateTime('d/m/Y H:i')
+                    ->sortable(),
             ])
+            ->defaultSort('date', 'desc')
             ->filters([
                 //
             ])

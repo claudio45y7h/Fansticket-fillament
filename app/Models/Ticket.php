@@ -12,12 +12,13 @@ class Ticket extends Model
     protected $fillable = [
         'id',
         'event_id',
-        'category_id',
         'section',
         'row',
         'seat',
         'info',
+        'type',
         'stock',
+        'price',
     ];
     public $incrementing = false;
     protected $keyType = 'string';
@@ -25,7 +26,6 @@ class Ticket extends Model
     protected static function boot()
     {
         parent::boot();
-        
         static::creating(function ($ticket) {
             if (empty($ticket->id)) {
                 $ticket->id = strtoupper(\Illuminate\Support\Str::random(16));
@@ -34,10 +34,11 @@ class Ticket extends Model
     }
 
     protected $casts = [
+        'price' => 'decimal:2',
         'stock' => 'integer',
-    ];
+        'key' => 'string',
 
-    protected $appends = ['type', 'price'];
+    ];
 
     public function event(): BelongsTo
     {
@@ -49,20 +50,5 @@ class Ticket extends Model
         return $this->belongsToMany(Order::class, 'order_ticket')
             ->withPivot('quantity')
             ->withTimestamps();
-    }
-
-    public function category(): BelongsTo
-    {
-        return $this->belongsTo(TicketCategory::class);
-    }
-
-    public function getTypeAttribute()
-    {
-        return $this->category ? $this->category->type : null;
-    }
-
-    public function getPriceAttribute()
-    {
-        return $this->category ? $this->category->price : null;
     }
 }

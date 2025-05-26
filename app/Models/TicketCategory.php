@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TicketCategory extends Model
 {
-    protected $table = 'ticket_categories';
+    use SoftDeletes;
+    
     public $incrementing = false;
     protected $keyType = 'string';
     
@@ -16,8 +18,7 @@ class TicketCategory extends Model
         'type',
         'price',
         'is_active'
-    ];
-    protected $casts = [
+    ];    protected $casts = [
         'price' => 'decimal:2',
         'is_active' => 'boolean',
     ];
