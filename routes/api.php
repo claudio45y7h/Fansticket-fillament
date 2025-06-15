@@ -1,10 +1,14 @@
 <?php
 use Illuminate\Http\Request;
 use App\Http\Controllers\ActionController;
+use App\Http\Controllers\OrderPdfController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\InvoiceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SeatmapController;
 Route::middleware('auth:sanctum')->group(function () {
@@ -28,7 +32,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
 // Ruta pública para crear orden por user_id
 Route::post('orders/by-user-id', [OrderController::class, 'storeByUserId']);
-
+Route::get('orders/{id}/send-pdf', [OrderPdfController::class, 'sendOrderPdf']);
+Route::get('orders/{id}/download-pdf', [OrderPdfController::class, 'downloadOrderPdf']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -71,3 +76,9 @@ Route::prefix('seatmaps')->group(function () {
     Route::post('/', [SeatmapController::class, 'store']);
     Route::get('/event/{id}', [SeatmapController::class, 'getSeatMapByEventId']);
 });
+Route::post('/products/transfer', [ProductController::class, 'transfer']);
+Route::post('/customers', [CustomerController::class, 'store']);
+Route::post('/products/bulkstore', [ProductController::class, 'bulkStore']);
+Route::post('/invoices', [InvoiceController::class, 'store']);
+Route::post('/customer-by-email', [CustomerController::class, 'getByEmailWithInvoices']);
+Route::get('invoices/customer/{customer_id}', [InvoiceController::class, 'getByCustomerId']);

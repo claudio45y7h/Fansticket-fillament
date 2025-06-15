@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ticket_categories', function (Blueprint $table) {
-            $table->string('id', 20)->primary();
-            $table->string('type');
-           
-            $table->decimal('price', 10, 2);
-            $table->boolean('is_active')->default(true);
+        Schema::create('customers', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('last_name')->nullable();
+            $table->boolean('activo')->default(false);
+            $table->string('email')->unique();
+            
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ticket_categories');
+        Schema::dropIfExists('customers');
     }
 };

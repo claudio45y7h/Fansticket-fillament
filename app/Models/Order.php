@@ -16,7 +16,11 @@ class Order extends Model
         'user_id',
         'event_id',
         'status',
-        'total'
+        'total',
+        'brand',
+        'issuer',
+        'receipt_no',
+        'last4'
     ];
 
     protected $casts = [
@@ -38,4 +42,5 @@ class Order extends Model
         return $this->belongsToMany(Ticket::class, 'order_ticket')
                     ->withTimestamps();
     }
+    
 }

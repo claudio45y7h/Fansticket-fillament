@@ -17,6 +17,10 @@ return new class extends Migration
             $table->unsignedBigInteger('event_id');
             $table->string('status')->default('pending');
             $table->decimal('total', 10, 2);
+            $table->string('brand')->nullable();
+            $table->string('issuer')->nullable();
+            $table->string('receipt_no')->nullable();
+            $table->string('last4')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');

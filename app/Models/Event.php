@@ -20,6 +20,11 @@ class Event extends Model
         'spotify_iframe',
         'venue_iframe',
     ];
+
+    protected $casts = [
+        'date' => 'datetime'
+    ];
+
     protected $appends = ['formatted_date'];
 
     public function tickets()

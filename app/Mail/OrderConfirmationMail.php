@@ -8,6 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Barryvdh\DomPDF\PDF;
 
 class OrderConfirmationMail extends Mailable
 {
@@ -42,6 +43,18 @@ class OrderConfirmationMail extends Mailable
 
     public function attachments(): array
     {
-        return [];
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.order-receipt', [
+            'order' => $this->order,
+            'user' => $this->order->user,
+            'event' => $this->order->event,
+            'tickets' => $this->order->tickets,
+        ]);
+
+        return [
+            \Illuminate\Mail\Attachment::fromData(
+                fn () => $pdf->output(),
+                "orden-{$this->order->id}.pdf"
+            )
+        ];
     }
 }

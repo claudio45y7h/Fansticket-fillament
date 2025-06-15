@@ -87,6 +87,11 @@ class OrderController extends Controller
             'tickets.*' => 'exists:tickets,id',
             'status' => 'required|string|in:pending,completed,cancelled',
             'total' => 'required|numeric|min:0',
+            'brand' => 'nullable|string',
+            'issuer' => 'nullable|string',
+            'last4' => 'nullable|string',
+            'receipt_no' => 'nullable|string',
+
         ]);
 
         if ($validator->fails()) {
@@ -104,7 +109,11 @@ class OrderController extends Controller
             'user_id' => $userId,
             'event_id' => $request->event_id,
             'status' => $request->status,
-            'total' => $request->total
+            'total' => $request->total,
+            'brand' => $request->brand,
+            'issuer' => $request->issuer,
+            'last4' => $request->last4,
+            'receipt_no' => $request->receipt_no,
         ]);
 
         // Adjuntar tickets a la orden
@@ -229,6 +238,34 @@ class OrderController extends Controller
             'message' => 'Orden eliminada correctamente',
             'status' => 200
         ], 200);
+    }
+
+    public function sendOrderConfirmation(Order $order, $email = null)
+    {
+        $email = $email ?? $order->user->email;
+        
+        if (!$email) {
+            throw new \Exception('No se encontró una dirección de correo electrónico para enviar la confirmación.');
+        }
+
+        \Mail::to($email)->send(new \App\Mail\OrderConfirmationMail($order));
+        
+        return response()->json([
+            'message' => 'Correo de confirmación enviado exitosamente',
+            'status' => 200
+        ], 200);
+    }
+
+    public function downloadOrderPDF(Order $order)
+    {
+        $pdf = PDF::loadView('pdf.order-receipt', [
+            'order' => $order,
+            'user' => $order->user,
+            'event' => $order->event,
+            'tickets' => $order->tickets,
+        ]);
+
+        return $pdf->download("orden-{$order->id}.pdf");
     }
 
     public function indexView()

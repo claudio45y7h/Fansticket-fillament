@@ -11,18 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tickets', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->string('id', 20)->primary(); // ID alfanumérico
-            $table->unsignedBigInteger('event_id');
+            $table->integer('customer_id')->nullable(); // ID del cliente, puede ser nulo
             $table->string('section')->nullable();
             $table->string('row')->nullable();
             $table->string('seat')->nullable();
             $table->string('info');
-            $table->string('category_id', 20);
-            $table->integer('stock')->default(0);
-            $table->foreign('category_id')->references('id')->on('ticket_categories')->onDelete('restrict');
+            $table->string('type');
+            $table->string('gate');
+            $table->integer('stock')->default(1);
+            $table->decimal('price', 10, 2);
+            $table->integer('barcode')->unique(); // Código de barras único
+            $table->string('status')->default('transferir'); // Estado del producto
+
             $table->timestamps();
-            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
         });
     }
 
@@ -31,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tickets');
+        Schema::dropIfExists('products');
     }
 };
