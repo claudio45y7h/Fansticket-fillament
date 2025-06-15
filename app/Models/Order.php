@@ -42,5 +42,10 @@ class Order extends Model
         return $this->belongsToMany(Ticket::class, 'order_ticket')
                     ->withTimestamps();
     }
+
+    public function pdfRecord()
+    {
+        return $this->hasOne(PdfRecord::class);
+    }
     
 }
